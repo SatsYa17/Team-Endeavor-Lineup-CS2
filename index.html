@@ -42,138 +42,558 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Endeavor Lineups</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Team Endeavor - CS2 & Valorant Roster</title>
     <style>
-        .lineup-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
-        .lineup-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+
+        body {
+            background-color: #f71d00;
+            color: #ff0000;
         }
-        .sidebar {
-            transition: width 0.3s ease;
+
+        /* Homepage Section */
+        #home {
+            height: 100vh;
+            background-image: url('https://z-p3-scontent.fpnh18-4.fna.fbcdn.net/v/t39.30808-6/494076773_716957527519960_2270733005053874427_n.png?stp=dst-png_s960x960&_nc_cat=105&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeE1GOyprsak1pubiRc0XLRwuFzQ5k3EBle4XNDmTcQGV8Kqq-D9zjSjgBiSc_JGFMCS_9pTHcN0mJ123tPNZxaz&_nc_ohc=uQ2nTFKoN7oQ7kNvwFAzmwS&_nc_oc=Adk2gx_Fs_OzREisZKA8mbKtLpsB4Z6UpKPmttA264KrkYcqWlwo56GPqtFAhbVu4O0&_nc_zt=23&_nc_ht=z-p3-scontent.fpnh18-4.fna&_nc_gid=e-PydajmwHLsKL0Y9Cgteg&oh=00_AfTDf-_fZcvDppmDFMr9VUBCKzDy47Jbzk3OG2WH9bBmYA&oe=686F20B8');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
         }
-        .sidebar-closed {
-            width: 0;
+
+        #home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.192);
+            z-index: 1;
+        }
+
+        .logo {
+            background-image: url('https://z-p3-scontent.fpnh18-3.fna.fbcdn.net/v/t39.30808-6/494068326_716959370853109_2896935055023092270_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHQ5Fq5MjdEnYpnHVnZN7sYsd09AkmkOOCx3T0CSaQ44BLmjNf1CBh4MUTE5jJlpR8Q-Q7k6FnYiihbswGTdpSV&_nc_ohc=QgoCbB1EggEQ7kNvwEO2avP&_nc_oc=AdmrqznZl6sxsJuVFSI_LPTVh7spgdyzH3DRhz1qRGNSnWI_Cw_9FuRioCNHNAP6Xq8&_nc_zt=23&_nc_ht=z-p3-scontent.fpnh18-3.fna&_nc_gid=RaafYUA2tbW-cIfRbjdxcQ&oh=00_AfSa2I4pptuMvQ3QOzz4Dw7RANEtIxtTVLpVvWgffDLZ8g&oe=686F01B9');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 20px;
+            max-width: 300px;
+            width: 100%;
+            height: 100px;
+            z-index: 2;
+        }
+
+        #home h1 {
+            font-size: 4rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ffffff;
+            z-index: 2;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(85, 85, 85, 0.233);
+        }
+
+        #home nav {
+            background: none;
+            z-index: 2;
+        }
+
+        #home nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            margin: 10px 20px;
+            padding: 10px 20px;
+            background-color: rgba(255, 0, 0, 0.8);
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            display: inline-block;
+        }
+
+        #home nav a:hover {
+            background-color: #a80000;
+            transform: scale(1.1);
+        }
+
+        .team-section, .shop-section, .contact-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .team-section h2, .shop-section h2, .contact-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #ffffff;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .team-member {
+            background-color: #ffffff;
+            border-radius: 10px;
             overflow: hidden;
+            transition: transform 0.3s;
+            cursor: pointer;
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+
+        .team-member:hover {
+            transform: scale(1.05);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        .team-member img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .member-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .member-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .member-info p {
+            color: #000000;
+            font-size: 1rem;
+        }
+
+        /* Shop Section Styles */
+        .shop-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .jersey-details {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .jersey-details img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .jersey-details h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .jersey-details p {
+            color: #ff0000;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .shop-form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+        }
+
+        .shop-form label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #ff0000;
+        }
+
+        .shop-form select, .shop-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff0000;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .shop-form button {
+            background-color: #ff0000;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .shop-form button:hover {
+            background-color: #ff7a7a;
+        }
+
+        /* Contact Section Styles */
+        .contact-section {
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-links a {
+            color: #ff0000;
+            text-decoration: none;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: #ff8282d5;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 0, 0, 0.623);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #000000;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .modal-content p {
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        footer {
+            background-color: #ff0000;
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        footer p {
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            #home h1 {
+                font-size: 2.5rem;
+            }
+
+            #home nav a {
+                font-size: 1.2rem;
+                margin: 10px;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .logo {
+                max-width: 200px;
+                height: 70px;
+            }
+
+            .shop-section {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .jersey-details, .shop-form {
+                max-width: 95%;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen">
-    <div class="flex">
-        <!-- Sidebar -->
-        <div id="sidebar" class="sidebar bg-gray-800 w-64 min-h-screen p-4">
-            <h2 class="text-xl font-bold mb-4 text-blue-400">Maps</h2>
-            <ul class="space-y-2">
-                <li><a href="#" onclick="showMap('mirage')" class="block p-2 rounded hover:bg-blue-600 transition-colors">Mirage</a></li>
-                <li><a href="#" onclick="showMap('inferno')" class="block p-2 rounded hover:bg-blue-600 transition-colors">Inferno</a></li>
-                <li><a href="#" onclick="showMap('dust2')" class="block p-2 rounded hover:bg-blue-600 transition-colors">Dust 2</a></li>
-                <li><a href="#" onclick="showMap('anubis')" class="block p-2 rounded hover:bg-blue-600 transition-colors">Anubis</a></li>
-            </ul>
-        </div>
-        <!-- Main Content -->
-        <div class="flex-1 p-6">
-            <header class="bg-blue-700 p-4 rounded-lg shadow-lg mb-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-3xl font-bold">Team Endeavor Lineups</h1>
-                        <p class="text-blue-200">Master grenade lineups for Counter-Strike</p>
-                    </div>
-                    <button id="toggleSidebar" class="p-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors md:hidden">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                    </button>
+<body>
+    <section id="home">
+        <div class="logo"></div>
+        <h1>Team Endeavor</h1>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#cs2-roster">CS2 Roster</a>
+            <a href="#valorant-roster">Valorant Roster</a>
+            <a href="#shop">Shop</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </section>
+
+    <section class="team-section" id="cs2-roster">
+        <h2>CS2 Roster</h2>
+        <div class="team-grid">
+            <div class="team-member" data-name="SaTsYa" data-role="In-Game Leader" data-nationality="Cambodia" data-age="24" data-bio="SaTsYa is a tactical genius, leading Team Endeavor with precision and calm under pressure.">
+                <img src="https://i.imgur.com/A7gPpMW.png" alt="SaTsYa">
+                <div class="member-info">
+                    <h3>SaTsYa</h3>
+                    <p>In-Game Leader</p>
                 </div>
-            </header>
-            <div id="content" class="space-y-6">
-                <h2 class="text-2xl font-semibold text-blue-400">Select a Map</h2>
-                <p class="text-gray-300">Choose a map from the sidebar to view grenade lineup tutorials.</p>
             </div>
+            <div class="team-member" data-name="HakleyS" data-role="AWPer" data-nationality="Cambodia" data-age="20" data-bio="HakleyS's pinpoint accuracy with the AWP makes him a feared opponent on any map.">
+                <img src="https://i.imgur.com/8hcZrDK.jpg" alt="HakleyS">
+                <div class="member-info">
+                    <h3>HakleyS</h3>
+                    <p>AWPer</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="Aamonn" data-role="Rifler" data-nationality="Cambodia" data-age="24" data-bio="Aamonn's aggressive playstyle and clutch performances define his role as a rifler.">
+                <img src="https://i.imgur.com/WWqRP5a.jpg" alt="Aamonn">
+                <div class="member-info">
+                    <h3>Aamonn</h3>
+                    <p>Rifler</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="Bry" data-role="Entry Fragger" data-nationality="Philippines" data-age="26" data-bio="Bry fearlessly leads the charge, breaking defenses with explosive entries.">
+                <img src="https://i.imgur.com/jI0RtRd.jpg" alt="Bry">
+                <div class="member-info">
+                    <h3>Bry</h3>
+                    <p>Entry Fragger</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="BoZo" data-role="Support" data-nationality="Cambodia" data-age="20" data-bio="BoZo's utility usage and teamwork keep the squad cohesive and dominant.">
+                <img src="https://i.imgur.com/zGTngtE.jpg" alt="BoZo">
+                <div class="member-info">
+                    <h3>BoZo</h3>
+                    <p>Support</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="Joker" data-role="Head Coach" data-nationality="Germany" data-age="27" data-bio="Joker's strategic insight and leadership guide Team Endeavor to victory.">
+                <img src="https://i.imgur.com/L3OSJx5.jpg" alt="Joker">
+                <div class="member-info">
+                    <h3>Joker</h3>
+                    <p>Head Coach</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section" id="valorant-roster">
+        <h2>Valorant Roster</h2>
+        <div class="team-grid">
+            <div class="team-member" data-name="Zurii" data-role="Duelist" data-nationality="USA" data-age="21" data-bio="Zurii's aggressive duelist playstyle disrupts opponents with unmatched speed.">
+                <img src="https://imgur.com/lAHJ4K1.jpg" alt="Zurii">
+                <div class="member-info">
+                    <h3>Zurii</h3>
+                    <p>Duelist</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="Preworkout" data-role="Controller" data-nationality="South Korea" data-age="23" data-bio="Preworkout controls the battlefield with precise smokes and strategic vision.">
+                <img src="https://imgur.com/M1gobwX.jpg" alt="Preworkout">
+                <div class="member-info">
+                    <h3>Preworkout</h3>
+                    <p>Controller</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="TronZ" data-role="Initiator" data-nationality="Canada" data-age="24" data-bio="TronZ's intel-gathering skills set up the team for flawless executes.">
+                <img src="https://imgur.com/DIYIblI.jpg" alt="TronZ">
+                <div class="member-info">
+                    <h3>TronZ</h3>
+                    <p>Initiator</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="Snoppy" data-role="Sentinel" data-nationality="Japan" data-age="22" data-bio="Snoppy locks down sites with traps and holds the line with precision.">
+                <img src="https://imgur.com/0gRPUos.jpg" alt="Snoppy">
+                <div class="member-info">
+                    <h3>Snoppy</h3>
+                    <p>Sentinel</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="2ez4bozo" data-role="Flex" data-nationality="Australia" data-age="25" data-bio="2ez4bozo adapts to any role, bringing versatility and clutch plays to the team.">
+                <img src="https://imgur.com/41UTmB1.jpg" alt="2ez4bozo">
+                <div class="member-info">
+                    <h3>2ez4bozo</h3>
+                    <p>Flex</p>
+                </div>
+            </div>
+            <div class="team-member" data-name="Coach Apex" data-role="Head Coach" data-nationality="UK" data-age="38" data-bio="Coach Apex's deep game knowledge shapes the Valorant squad's success.">
+                <img src="https://imgur.com/L3OSJx5.jpg" alt="Coach Apex">
+                <div class="member-info">
+                    <h3>Coach Apex</h3>
+                    <p>Head Coach</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="shop-section" id="shop">
+        <h2>Team Endeavor Shop</h2>
+        <div class="shop-section">
+            <div class="jersey-details">
+                <img src="https://i.imgur.com/Ry9Qt4C.jpeg" alt="Team Endeavor Jersey">
+                <h3>Official Team Endeavor Jersey</h3>
+                <p>Material: 100% Polyester, breathable and moisture-wicking fabric</p>
+                <p>Colors: Black, Gold</p>
+            </div>
+            <div class="shop-form">
+                <h3>Order Your Jersey</h3>
+                <label for="jersey-size">Jersey Size:</label>
+                <select id="jersey-size" name="jersey-size">
+                    <option value="S">M</option>
+                    <option value="M">X</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                </select>
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" min="1" value="1">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name">
+                <button onclick="alert('Thank you for your order! We will contact you soon.')">Submit Order</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <h2>Contact Us</h2>
+        <div class="social-links">
+            <a href="https://web.facebook.com/EndeavorOfficial" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="https://t.me/+0964033102" target="_blank" rel="noopener noreferrer">Telegram</a>
+            <a href="https://www.instagram.com/satsya17/" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://x.com/EndeavorEsport9" target="_blank" rel="noopener noreferrer">X</a>
+            <a href="https://www.youtube.com/@satsya" target="_blank" rel="noopener noreferrer">YouTube</a>
+        </div>
+    </section>
+
+    <!-- Modal for Player Details -->
+    <div class="modal" id="playerModal">
+        <div class="modal-content">
+            <span class="close-btn">X</span>
+            <img id="modalImage" src="" alt="Player">
+            <h3 id="modalName"></h3>
+            <p id="modalRole"></p>
+            <p id="modalNationality"></p>
+            <p id="modalAge"></p>
+            <p id="modalBio"></p>
         </div>
     </div>
 
-        <script>
-        const lineups = {
-            mirage: [
-                {
-                    title: "A Site Smoke from T Spawn",
-                    description: "Stand at T Spawn corner, aim at the top left edge of the building, and throw a smoke to block A Site CT vision.",
-                    image: "https://via.placeholder.com/600x300?text=Mirage+A+Site+Smoke",
-                    video: "https://www.youtube.com/embed/dQw4w9WgXcQ" // Replace with real YouTube video ID
-                },
-                {
-                    title: "Mid Window Smoke",
-                    description: "Position at Mid boxes, aim at the window's top right corner, and throw to block Mid vision.",
-                    image: "https://via.placeholder.com/600x300?text=Mirage+Mid+Window+Smoke",
-                    video: "https://www.youtube.com/embed/abc123XYZ" // Replace with real YouTube video ID
-                }
-            ],
-            inferno: [
-                {
-                    title: "Banana Smoke from T Side",
-                    description: "Stand near T entrance to Banana, aim at the second window on the building, and throw to block CT vision.",
-                    image: "https://via.placeholder.com/600x300?text=Inferno+Banana+Smoke",
-                    video: "https://www.youtube.com/embed/xyz789ABC" // Replace with real YouTube video ID
-                }
-            ],
-            dust2: [
-                {
-                    title: "Long A Smoke",
-                    description: "From T Spawn, aim at the top of the blue building edge and throw to block Long A doors.",
-                    image: "https://via.placeholder.com/600x300?text=Dust2+Long+A+Smoke",
-                    video: "https://www.youtube.com/embed/123defGHI" // Replace with real YouTube video ID
-                }
-            ],
-            anubis: [
-                {
-                    title: "A Site Molotov from T Spawn",
-                    description: "Stand at T Spawn, aim at the middle window, and throw a molotov to clear A Site.",
-                    image: "https://via.placeholder.com/600x300?text=Anubis+A+Site+Molotov",
-                    video: "https://www.youtube.com/embed/anubis123XYZ" // Replace with real YouTube video ID
-                }
-            ]
-        };
+    <footer>
+        <p>© 2025 Team Endeavor CAMBODIA. All rights reserved.</p>
+    </footer>
 
-        function showMap(map) {
-            const content = document.getElementById('content');
-            content.innerHTML = `<h2 class="text-2xl font-semibold text-blue-400">${map.charAt(0).toUpperCase() + map.slice(1)} Lineups</h2>`;
-            if (lineups[map] && lineups[map].length > 0) {
-                content.innerHTML += '<div class="grid grid-cols-1 md:grid-cols-2 gap-6 fade-in">';
-                lineups[map].forEach(lineup => {
-                    content.innerHTML += `
-                        <div class="lineup-card bg-gray-800 p-4 rounded-lg shadow">
-                            <h3 class="text-xl font-bold text-blue-400">${lineup.title}</h3>
-                            <img src="${lineup.image}" alt="${lineup.title}" class="w-full h-auto rounded-md my-2">
-                            <iframe src="${lineup.video}" frameborder="0" allowfullscreen class="w-full h-48 rounded-md my-2"></iframe>
-                            <p class="text-gray-300">${lineup.description}</p>
-                        </div>
-                    `;
-                });
-                content.innerHTML += '</div>';
-            } else {
-                content.innerHTML += `<p class="text-gray-300">No lineups available for this map yet.</p>`;
-            }
-            if (window.innerWidth < 768) {
-                document.getElementById('sidebar').classList.add('sidebar-closed');
-            }
-        }
+    <script>
+        // Player Modal Functionality
+        const modal = document.getElementById('playerModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalName = document.getElementById('modalName');
+        const modalRole = document.getElementById('modalRole');
+        const modalNationality = document.getElementById('modalNationality');
+        const modalAge = document.getElementById('modalAge');
+        const modalBio = document.getElementById('modalBio');
+        const closeBtn = document.querySelector('.close-btn');
 
-        document.getElementById('toggleSidebar').addEventListener('click', () => {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('sidebar-closed');
+        document.querySelectorAll('.team-member').forEach(member => {
+            member.addEventListener('click', () => {
+                modalImage.src = member.querySelector('img').src;
+                modalName.textContent = member.dataset.name;
+                modalRole.textContent = `Role: ${member.dataset.role}`;
+                modalNationality.textContent = `Nationality: ${member.dataset.nationality}`;
+                modalAge.textContent = `Age: ${member.dataset.age}`;
+                modalBio.textContent = member.dataset.bio;
+                modal.style.display = 'flex';
+            });
         });
 
-        if (window.innerWidth < 768) {
-            document.getElementById('sidebar').classList.add('sidebar-closed');
-        }
-        </script>
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // View Counter Functionality for Shop
+        let viewCount = localStorage.getItem('jerseyViewCount') || 0;
+        viewCount = parseInt(viewCount) + 1;
+        localStorage.setItem('jerseyViewCount', viewCount);
+        document.getElementById('view-counter').textContent = `Views: ${viewCount}`;
+
+        const shopSection = document.getElementById('shop');
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                viewCount = parseInt(localStorage.getItem('jerseyViewCount')) || 0;
+                viewCount++;
+                localStorage.setItem('jerseyViewCount', viewCount);
+                document.getElementById('view-counter').textContent = `Views: ${viewCount}`;
+            }
+        });
+        observer.observe(shopSection);
+    </script>
 </body>
 </html>
