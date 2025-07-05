@@ -1,0 +1,168 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS Lineup Tutorials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .lineup-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .lineup-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+        .sidebar {
+            transition: width 0.3s ease;
+        }
+        .sidebar-closed {
+            width: 0;
+            overflow: hidden;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar bg-gray-800 w-64 min-h-screen p-4">
+            <h2 class="text-xl font-bold mb-4 text-blue-400">Maps</h2>
+            <ul class="space-y-2">
+                <li><a href="#" onclick="showMap('mirage')" class="block p-2 rounded hover:bg-blue-600 transition-colors">Mirage</a></li>
+                <li><a href="#" onclick="showMap('inferno')" class="block p-2 rounded hover:bg-blue-600 transition-colors">Inferno</a></li>
+                <li><a href="#" onclick="showMap('dust2')" class="block p-2 rounded hover:bg-blue-600 transition-colors">Dust 2</a></li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <header class="bg-blue-700 p-4 rounded-lg shadow-lg mb-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold">CS Lineup Tutorials</h1>
+                        <p class="text-blue-200">Master grenade lineups for Counter-Strike</p>
+                    </div>
+                    <button id="toggleSidebar" class="p-2 bg-blue-500 rounded hover:bg-blue-600 transition-colors md:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </header>
+            <div id="content" class="space-y-6">
+                <h2 class="text-2xl font-semibold text-blue-400">Select a Map</h2>
+                <p class="text-gray-300">Choose a map from the sidebar to view grenade lineup tutorials.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lineups = {
+            mirage: [
+                {
+                    title: "A Site Smoke from T Spawn",
+                    description: "Stand at T Spawn corner, aim at the top left edge of the building, and throw a smoke to block A Site CT vision.",
+                    image: "https://via.placeholder.com/600x300?text=Mirage+A+Site+Smoke"
+                },
+                {
+                    title: "Mid Window Smoke",
+                    description: "Position at Mid boxes, aim at the window's top right corner, and throw to block Mid vision.",
+                    image: "https://via.placeholder.com/600x300?text=Mirage+Mid+Window+Smoke"
+                }
+            ],
+            inferno: [
+                {
+                    title: "Banana Smoke from T Side",
+                    description: "Stand near T entrance to Banana, aim at the second window on the building, and throw to block CT vision.",
+                    image: "https://via.placeholder.com/600x300?text=Inferno+Banana+Smoke"
+                }
+            ],
+            dust2: [
+                {
+                    title: "Long A Smoke",
+                    description: "From T Spawn, aim at the top of the blue building edge and throw to block Long A doors.",
+                    image: "https://via.placeholder.com/600x300?text=Dust2+Long+A+Smoke"
+                }
+            ]
+        };
+
+        function showMap(map) {
+            const content = document.getElementById('content');
+            content.innerHTML = `<h2 class="text-2xl font-semibold text-blue-400">${map.charAt(0).toUpperCase() + map.slice(1)} Lineups</h2>`;
+            if (lineups[map] && lineups[map].length > 0) {
+                content.innerHTML += '<div class="grid grid-cols-1 md:grid-cols-2 gap-6 fade-in">';
+                lineups[map].forEach(lineup => {
+                    content.innerHTML += `
+                        <div class="lineup-card bg-gray-800 p-4 rounded-lg shadow">
+                            <h3 class="text-xl font-bold text-blue-400">${lineup.title}</h3>
+                            <img src="${lineup.image}" alt="${lineup.title}" class="w-full h-auto rounded-md my-2">
+                            <p class="text-gray-300">${lineup.description}</p>
+                        </div>
+                    `;
+                });
+                content.innerHTML += '</div>';
+            } else {
+                content.innerHTML += `<p class="text-gray-300">No lineups available for this map yet.</p>`;
+            }
+            // Close sidebar on mobile after selection
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('sidebar-closed');
+            }
+        }
+
+        // Sidebar toggle for mobile
+        document.getElementById('toggleSidebar').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('sidebar-closed');
+        });
+
+        // Ensure sidebar is closed on mobile by default
+        if (window.innerWidth < 768) {
+            document.getElementById('sidebar').classList.add('sidebar-closed');
+        }
+    </script>
+</body>
+</html>
